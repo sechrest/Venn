@@ -1,0 +1,104 @@
+<!DOCTYPE HTML> 
+<html> 
+<head> 
+ 
+    <style> 
+	* {
+		margin: 0;
+		padding: 0;
+	}
+	</style> 
+ 
+<script> 
+ 
+var canvas, context;
+var circles = Array();
+ 
+function drawCircle( name, centerX, centerY, radius, fill ) {
+	/* create and store circle */
+	var circle = Object();
+	circle.name = name;
+	circle.x = centerX;
+	circle.y = centerY;
+	circle.radius = radius;
+	circle.fill = fill;
+	circles.push( circle );
+	/* draw circle */
+	context.beginPath();
+	context.arc( centerX, centerY, radius, 0, 2*Math.PI, false );
+	context.fillStyle = fill;
+	context.fill();
+	context.lineWidth = 0;
+	context.strokeStyle = "black";
+	context.stroke();
+}
+ 
+function getMousePos( e ) {
+	var pos = Object();
+	if ( !e ) var e = window.event;
+	if ( e.pageX || e.pageY ) {
+		pos.x = e.pageX;
+		pos.y = e.pageY;
+	} else if (e.clientX || e.clientY) {
+		pos.x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+		pos.y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+	}
+	return pos;
+}
+ 
+function inCircle( pos, circle ) {
+	var dx2 = Math.pow( circle.x - pos.x, 2 );
+	var dy2 = Math.pow( circle.y - pos.y, 2 );
+	var r2 = Math.pow( circle.radius, 2 );
+	return ( dx2 + dy2 ) < r2;
+}
+ 
+function init() {
+	canvas=document.getElementById( 'myCanvas' );
+	context=canvas.getContext( '2d' );
+	drawCircle( 'one', 225, 175, 100, 'rgba( 255, 142, 214, 0.5 )' );
+	drawCircle( 'two', 150, 300, 100, 'rgba( 142, 214, 255, 0.5 )' );
+	drawCircle( 'three', 300, 300, 100, 'rgba( 214, 255, 142, 0.5 )' );
+	/*
+	drawCircle( 225, 175, 100, '#ff8ed6' );
+	drawCircle( 150, 300, 100, '#8ed6ff' );
+	drawCircle( 300, 300, 100, '#d6ff8e' );
+	 */
+}
+ 
+function handleMouseOver( e ) {
+}
+ 
+function handleMouseOut( e ) {
+}
+ 
+function handleMouseClick( e ) {
+	var pos = getMousePos( e );
+	var names = '';
+	for ( i=0; i < circles.length; i++ ) {
+		if ( inCircle( pos, circles[i] ) ) {
+			if ( names ) {
+				names += ', ';
+			}
+			names += circles[i].name;
+		}
+	}
+	if ( names ) {
+		alert( pos.x + ', ' + pos.y + ': ' + names );
+	}
+}
+ 
+</script> 
+ 
+</head> 
+ 
+<body onload="init()"> 
+	<canvas id="myCanvas" width="800" height="600"
+		onmouseover="handleMouseOver( event )"
+		onmouseout="handleMouseOut( event )"
+		onclick="handleMouseClick( event )"> 
+	</canvas> 
+ 
+</body> 
+ 
+</html> 
